@@ -6,8 +6,8 @@ import cors from "cors";
 import hpp from "hpp";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import errorMiddleware from "@middlewares/errorMiddleware";
-import sessionMiddleware from "./middlewares/sessionMiddleware";
+import errorMiddleware from "@/middlewares/error.middleware";
+import sessionMiddleware from "./middlewares/session.middleware";
 
 class App {
     public app: express.Application;

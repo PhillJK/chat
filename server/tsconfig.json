@@ -28,7 +28,7 @@
             "@/*": ["*"],
             "@config": ["config"],
             "@controllers/*": ["controllers/*"],
-            // "@dtos/*": ["dtos/*"],
+            "@dtos/*": ["dtos/*"],
             "@errors/*": ["errors/*"],
             "@interfaces/*": ["interfaces/*"],
             "@middlewares/*": ["middlewares/*"],
