@@ -7,6 +7,7 @@ import hpp from "hpp";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "@middlewares/errorMiddleware";
+import sessionMiddleware from "./middlewares/sessionMiddleware";
 
 class App {
     public app: express.Application;
@@ -35,6 +36,7 @@ class App {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cookieParser());
+        this.app.use(sessionMiddleware());
     }
 
     private initializeRoutes(routes: Routes[]) {

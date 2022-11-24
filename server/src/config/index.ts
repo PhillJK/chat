@@ -12,4 +12,9 @@ const ORIGIN =
 const LOG_FORMAT =
     typeof process.env.LOG_FORMAT === "string" ? process.env.LOG_FORMAT : "dev";
 
-export { PORT, ORIGIN, CREDENTIALS, LOG_FORMAT };
+const SECRET_KEY =
+    typeof process.env.SECRET_KEY === "string"
+        ? process.env.SECRET_KEY
+        : "secret";
+
+export { PORT, ORIGIN, CREDENTIALS, LOG_FORMAT, SECRET_KEY };

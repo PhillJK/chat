@@ -2,7 +2,7 @@ import { Router } from "express";
 import AuthController from "@/controllers/auth.controller";
 import { Routes } from "@/interfaces/routes.interfaces";
 
-class IndexRoute implements Routes {
+class AuthRoute implements Routes {
     public path = "/auth/";
     public router = Router();
     public authController = new AuthController();
@@ -18,4 +18,4 @@ class IndexRoute implements Routes {
     }
 }
 
-export default IndexRoute;
+export default AuthRoute;
