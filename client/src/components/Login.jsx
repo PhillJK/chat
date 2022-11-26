@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
-import axios from "axios";
+import { AxiosError } from "axios";
 
 const Login = () => {
     const authContext = useContext(AuthContext);

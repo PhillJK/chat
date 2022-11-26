@@ -31,7 +31,7 @@ const Header = () => {
                 justifyContent: "end",
                 gap: 30,
                 width: "100%",
-                border: "1px solid red",
+                height: "10%",
             }}
         >
             <p>Вы залогинены как {authContext.user.name}</p>

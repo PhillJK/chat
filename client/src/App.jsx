@@ -3,6 +3,7 @@ import "./App.css";
 import Auth from "./components/Auth";
 import MainPage from "./components/MainPage";
 import AuthContext from "./context/AuthContext";
+import ChatProvider from "./provider/ChatProvider";
 import { Toaster } from "react-hot-toast";
 
 function App() {
@@ -15,7 +16,9 @@ function App() {
             ) : !user?.id ? (
                 <Auth />
             ) : (
-                <MainPage />
+                <ChatProvider>
+                    <MainPage />
+                </ChatProvider>
             )}
             <Toaster reverseOrder={true} position="bottom-right" />
         </div>
