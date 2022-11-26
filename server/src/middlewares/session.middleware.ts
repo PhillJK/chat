@@ -2,6 +2,13 @@ import session from "express-session";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { PrismaClient } from "@prisma/client";
 import { SECRET_KEY } from "@/config";
+import { User } from "@interfaces/user.interfaces";
+
+declare module "express-session" {
+    interface SessionData {
+        user: User;
+    }
+}
 
 const sessionMiddleware = () => {
     const weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;

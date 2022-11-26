@@ -15,6 +15,7 @@ model User {
   email     String   @unique
   password  String
   name      String
+  chats     Chat[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
@@ -24,4 +25,25 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
+}
+
+model Chat {
+  id           Int       @id @default(autoincrement())
+  participants User[]
+  messages     Message[]
+}
+
+model Message {
+  id        Int         @id @default(autoincrement())
+  type      MessageType
+  chat      Chat        @relation(fields: [chatId], references: [id])
+  chatId    Int
+  text      String?
+  url       String?
+  createdAt DateTime    @default(now()) @map("created_at")
+}
+
+enum MessageType {
+  File
+  Text
 }

@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 const ChatProvider = ({ children }) => {
     const [isFetchingChats, setIsFetchingChats] = useState(true);
     const [chats, setChats] = useState([]);
+    const [selectedChat, setSelectedChat] = useState();
+    const [messages, setMessages] = useState([]);
     const authContext = useContext(AuthContext);
 
     useEffect(() => {
@@ -14,7 +16,7 @@ const ChatProvider = ({ children }) => {
 
         axios
             .get(
-                `${import.meta.env.VITE_SERVER_URL}/api/chat/${
+                `${import.meta.env.VITE_SERVER_URL}/api/chat/user/${
                     authContext.user.id
                 }`,
             )
@@ -48,6 +50,15 @@ const ChatProvider = ({ children }) => {
         else throw new Error(data?.message);
     };
 
+    const getChat = async chatId => {
+        const { data } = await axios.get(
+            `${import.meta.env.VITE_SERVER_URL}/api/chat/${chatId}`,
+        );
+
+        if (data.status === "ok") setMessages(data?.messages);
+        else throw new Error(data?.message);
+    };
+
     return (
         <ChatContext.Provider
             value={{
@@ -55,6 +66,7 @@ const ChatProvider = ({ children }) => {
                 isFetchingChats,
                 findUsersToChatWith,
                 addChatToUser,
+                getChat,
             }}
         >
             {children}

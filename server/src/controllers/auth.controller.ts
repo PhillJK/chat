@@ -1,14 +1,7 @@
 import { CreateUserDto, UserDto } from "@/dtos/user.dto";
 import AuthService from "@/services/auth.service";
 import { NextFunction, Request, Response } from "express";
-import { User } from "@interfaces/user.interfaces";
 import { OperationalError } from "@/errors/OperationalError";
-
-declare module "express-session" {
-    interface SessionData {
-        user: User;
-    }
-}
 
 class AuthController {
     public authService = new AuthService();

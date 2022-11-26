@@ -8,18 +8,16 @@ const errorMiddleware = (
     next: NextFunction,
 ) => {
     try {
+        console.error(error);
         if (error instanceof OperationalError) {
             return error.sendError(res);
         } else {
-            return res
-                .status(500)
-                .json({
-                    status: "fail",
-                    message: "Something went wrong. Try later",
-                });
+            return res.status(500).json({
+                status: "fail",
+                message: "Something went wrong. Try later",
+            });
         }
     } catch (error) {
-        console.error(error);
         next(error);
     }
 };
