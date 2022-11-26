@@ -1,0 +1,17 @@
+{
+    "extends": ["prettier", "eslint:recommended", "plugin:prettier/recommended", "plugin:react/recommended"],
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module"
+    },
+    // "rules": {
+    //     "no-unused-vars": "warn",
+    //     "no-unused-expressions": "warn"
+    // },
+    "prettier/prettier": [
+        "error",
+        {
+            "endOfLine": "auto"
+        }
+    ]
+  }
