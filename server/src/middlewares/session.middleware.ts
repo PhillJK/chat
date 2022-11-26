@@ -5,11 +5,11 @@ import { SECRET_KEY } from "@/config";
 
 const sessionMiddleware = () => {
     const weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
-    const twoMinutesInMilliseconds = 2 * 60 * 1000;
+    const minuteInMilliseconds = 60 * 1000;
     const prisma = new PrismaClient();
 
     const store = new PrismaSessionStore(prisma as any, {
-        checkPeriod: twoMinutesInMilliseconds,
+        checkPeriod: minuteInMilliseconds,
         dbRecordIdIsSessionId: true,
         dbRecordIdFunction: undefined,
     });
@@ -19,7 +19,7 @@ const sessionMiddleware = () => {
             maxAge: weekInMilliseconds,
         },
         secret: SECRET_KEY,
-        resave: true,
+        resave: false,
         saveUninitialized: true,
         store,
     });

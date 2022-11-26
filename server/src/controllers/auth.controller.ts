@@ -65,11 +65,15 @@ class AuthController {
         next: NextFunction,
     ): Promise<void> => {
         try {
-            req.session.destroy(err => {
-                if (err) throw new OperationalError("Failed to logout", 500);
-
-                return res.status(200).json({ status: "ok" });
+            await new Promise((resolve, reject) => {
+                req.session.destroy(err => {
+                    if (err)
+                        reject(new OperationalError("Could not log out", 500));
+                    resolve(null);
+                });
             });
+
+            res.status(200).json({ status: "ok" });
         } catch (error) {
             next(error);
         }
