@@ -1,12 +1,12 @@
 import React from "react";
 
-const Participant = ({ participant, onClick = () => {} }) => {
+const Participant = ({ participant, onClick = () => {}, isActive }) => {
     return (
         <div
             style={{
                 margin: "10px 0",
                 padding: "10px",
-                background: "grey",
+                background: isActive ? "grey" : "#1a1a1a",
                 borderRadius: "15px",
                 cursor: "pointer",
                 display: "flex",

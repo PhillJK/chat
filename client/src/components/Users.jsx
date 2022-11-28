@@ -7,8 +7,14 @@ import Participant from "./Participant";
 import AuthContext from "../context/AuthContext";
 
 const Users = () => {
-    const { isFetchingChats, chats, findUsersToChatWith, addChatToUser } =
-        useContext(ChatContext);
+    const {
+        isFetchingChats,
+        chats,
+        findUsersToChatWith,
+        addChatToUser,
+        setSelectedChat,
+        selectedChat,
+    } = useContext(ChatContext);
     const [query, setQuery] = useState("");
     const [users, setUsers] = useState([]);
     const authContext = useContext(AuthContext);
@@ -47,11 +53,14 @@ const Users = () => {
         return participant[0];
     };
 
+    const isChatSelected = (chat, selectedChatId) => {
+        return chat.id === selectedChatId;
+    };
+
     return (
         <div
             style={{
                 width: 300,
-                height: "100%",
             }}
         >
             {isFetchingChats ? (
@@ -59,14 +68,29 @@ const Users = () => {
             ) : (
                 <div>
                     <div>
-                        <label>
+                        <label
+                            style={{
+                                display: "flex",
+                                gap: 10,
+                                marginBottom: 30,
+                            }}
+                        >
                             <input
+                                style={{
+                                    width: "75%",
+                                }}
+                                placeholder="Введите ник юзера..."
                                 type="text"
                                 name="query"
                                 value={query}
                                 onChange={e => setQuery(e.target.value)}
                             />
-                            <button onClick={submitForm}>Найти</button>
+                            <button
+                                style={{ width: "25%" }}
+                                onClick={submitForm}
+                            >
+                                Найти
+                            </button>
                         </label>
                     </div>
                     {!!users.length ? (
@@ -84,6 +108,8 @@ const Users = () => {
                             <Participant
                                 key={chat.id}
                                 participant={getParticipant(chat)}
+                                onClick={() => setSelectedChat(chat.id)}
+                                isActive={isChatSelected(chat, selectedChat)}
                             />
                         ))
                     ) : (
