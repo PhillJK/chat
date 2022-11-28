@@ -26,7 +26,7 @@ const sessionMiddleware = () => {
             maxAge: weekInMilliseconds,
         },
         secret: SECRET_KEY,
-        resave: false,
+        resave: true,
         saveUninitialized: true,
         store,
     });

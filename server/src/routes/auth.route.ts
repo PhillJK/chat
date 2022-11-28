@@ -3,6 +3,7 @@ import AuthController from "@/controllers/auth.controller";
 import { Routes } from "@/interfaces/routes.interfaces";
 import validationMiddleware from "@/middlewares/validation.middleware";
 import { CreateUserDto, UserDto } from "@/dtos/user.dto";
+import authMiddleware from "@/middlewares/auth.middleware";
 
 class AuthRoute implements Routes {
     public path = "/auth/";
@@ -24,9 +25,14 @@ class AuthRoute implements Routes {
             validationMiddleware(UserDto, "body"),
             this.authController.login,
         );
-        this.router.get(`${this.path}logout`, this.authController.logout);
+        this.router.get(
+            `${this.path}logout`,
+            authMiddleware,
+            this.authController.logout,
+        );
         this.router.get(
             `${this.path}fetch-user`,
+            authMiddleware,
             this.authController.fetchUser,
         );
     }

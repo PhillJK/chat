@@ -1,4 +1,4 @@
-import { AddChatDto } from "@/dtos/chat.dto";
+import { AddChatToUserDto } from "@/dtos/chat.dto";
 import ChatService from "@/services/chat.service";
 import { NextFunction, Request, Response } from "express";
 
@@ -11,8 +11,9 @@ class ChatController {
         next: NextFunction,
     ) => {
         try {
-            const userId = Number(req.params?.id);
-            const chats = await this.chatService.getUserChats(userId);
+            const chats = await this.chatService.getUserChats(
+                req.session?.user?.id as number,
+            );
 
             res.status(200).json({ status: "ok", chats });
         } catch (error) {
@@ -42,11 +43,11 @@ class ChatController {
         next: NextFunction,
     ) => {
         try {
-            const addUserDto: AddChatDto = req.body;
+            const body: AddChatToUserDto = req.body;
 
             const chat = await this.chatService.addChatToUser(
-                addUserDto.userId,
-                addUserDto.otherUserId,
+                req.session?.user?.id as number,
+                body.userId,
             );
 
             res.status(201).json({ status: "ok", chat });

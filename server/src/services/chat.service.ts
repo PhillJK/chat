@@ -1,5 +1,5 @@
 import { OperationalError } from "@/errors/OperationalError";
-import { Chat, User } from "@/interfaces/chat.interfact";
+import { Chat, User } from "@/interfaces/chat.interfaces";
 import { isEmpty } from "@/utils/util";
 import { PrismaClient } from "@prisma/client";
 import { exclude } from "@utils/util";

@@ -1,9 +1,6 @@
-import { IsEmail, IsString, IsNumber } from "class-validator";
+import { IsNumber } from "class-validator";
 
-export class AddChatDto {
+export class AddChatToUserDto {
     @IsNumber()
     public userId!: number;
-
-    @IsNumber()
-    public otherUserId!: number;
 }
