@@ -63,6 +63,21 @@ class ChatService {
                 400,
             );
 
+        const isChatExists = await this.chats.findFirst({
+            where: {
+                participants: {
+                    every: {
+                        id: {
+                            in: [otherUserId, userId],
+                        },
+                    },
+                },
+            },
+        });
+
+        if (isChatExists)
+            throw new OperationalError("Chat already exists", 400);
+
         const chatData = await this.chats.create({
             data: {
                 participants: {
