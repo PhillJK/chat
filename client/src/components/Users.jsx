@@ -31,8 +31,8 @@ const Users = () => {
             });
     };
 
-    const handleAddChat = (userId, otherUserId) => {
-        addChatToUser(userId, otherUserId)
+    const handleAddChat = userId => {
+        addChatToUser(userId)
             .catch(error => {
                 if (error instanceof AxiosError) {
                     toast.error(error.response?.data?.message);
@@ -98,9 +98,7 @@ const Users = () => {
                             <User
                                 key={user.id}
                                 name={user.name}
-                                onClick={() =>
-                                    handleAddChat(authContext.user.id, user.id)
-                                }
+                                onClick={() => handleAddChat(user.id)}
                             />
                         ))
                     ) : chats.length ? (

@@ -16,11 +16,12 @@ const ChatProvider = ({ children }) => {
         if (!authContext?.user?.id) return;
 
         axios
-            .get(
-                `${import.meta.env.VITE_SERVER_URL}/api/chat/user/${
-                    authContext.user.id
-                }`,
-            )
+            .get(`${import.meta.env.VITE_SERVER_URL}/api/chat/user`, {
+                withCredentials: true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                },
+            })
             .then(response => {
                 setChats(response.data.chats);
             })
@@ -51,16 +52,28 @@ const ChatProvider = ({ children }) => {
     const findUsersToChatWith = async query => {
         const { data } = await axios.get(
             `${import.meta.env.VITE_SERVER_URL}/api/chat/find?name=${query}`,
+            {
+                withCredentials: true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                },
+            },
         );
 
         if (data.status === "ok") return data.users;
         else throw new Error(data?.message);
     };
 
-    const addChatToUser = async (userId, otherUserId) => {
+    const addChatToUser = async userId => {
         const { data } = await axios.post(
             `${import.meta.env.VITE_SERVER_URL}/api/chat/addChat`,
-            { userId, otherUserId },
+            { userId },
+            {
+                withCredentials: true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                },
+            },
         );
 
         if (data.status === "ok") setChats(prev => [...prev, data?.chat]);
@@ -70,6 +83,12 @@ const ChatProvider = ({ children }) => {
     const getChatMessages = async chatId => {
         const { data } = await axios.get(
             `${import.meta.env.VITE_SERVER_URL}/api/chat/${chatId}`,
+            {
+                withCredentials: true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                },
+            },
         );
 
         if (data.status === "ok") return data?.messages;

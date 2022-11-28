@@ -62,6 +62,12 @@ const AuthProvider = ({ children }) => {
     const logout = async () => {
         const { data } = await axios.get(
             `${import.meta.env?.VITE_SERVER_URL}/api/auth/logout`,
+            {
+                withCredentials: true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                },
+            },
         );
 
         if (data?.status === "ok") setUser({});
