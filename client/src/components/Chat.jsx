@@ -25,6 +25,7 @@ const Chat = () => {
                         borderRadius: "15px",
                         flexGrow: 1,
                         flexShrink: 1,
+                        flexBasis: "600px",
                         margin: "0 20px 20px 20px",
                         display: "flex",
                         flexDirection: "column-reverse",
@@ -60,48 +61,39 @@ const Chat = () => {
                         }}
                         placeholder="Введите текст..."
                     />
-                    <div
-                        style={{
-                            flexShrink: 1,
-                            flexGrow: 1,
-                            marginBottom: 10,
-                            overflowY: "scroll",
-                        }}
-                    >
-                        {isFetchingMessages ? (
-                            <h1>Loading...</h1>
-                        ) : !!messagesOfSelectedChat?.length ? (
-                            <div
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "end",
-                                    alignItems: "start",
-                                }}
-                            >
-                                {messagesOfSelectedChat.map(m => (
-                                    <div
-                                        style={{
-                                            padding: "10px",
-                                            borderRadius: "10px",
-                                            background:
-                                                m.fromId === authContext.user.id
-                                                    ? "#808080"
-                                                    : "#2b2a33",
-                                            margin: "5px 20px",
-                                        }}
-                                        key={m.id}
-                                    >
-                                        {m.text}
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <p>Нету сообщений</p>
-                        )}
-                    </div>
+                    {isFetchingMessages ? (
+                        <h1>Loading...</h1>
+                    ) : !!messagesOfSelectedChat?.length ? (
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "end",
+                                alignItems: "start",
+                                overflowY: "scroll",
+                                marginBottom: "10px",
+                            }}
+                        >
+                            {messagesOfSelectedChat.map(m => (
+                                <div
+                                    style={{
+                                        padding: "10px",
+                                        borderRadius: "10px",
+                                        background:
+                                            m.fromId === authContext.user.id
+                                                ? "#808080"
+                                                : "#2b2a33",
+                                        margin: "5px 20px",
+                                    }}
+                                    key={m.id}
+                                >
+                                    {m.text}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>Нету сообщений</p>
+                    )}
                 </div>
             ) : (
                 <div></div>
