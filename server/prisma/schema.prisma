@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
   password  String
   name      String
   chats     Chat[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  messages  Message[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 }
 
 model Session {
@@ -38,6 +39,8 @@ model Message {
   type      MessageType
   chat      Chat        @relation(fields: [chatId], references: [id])
   chatId    Int
+  from      User        @relation(fields: [fromId], references: [id])
+  fromId    Int
   text      String?
   url       String?
   createdAt DateTime    @default(now()) @map("created_at")
