@@ -14,6 +14,7 @@ const Users = () => {
         addChatToUser,
         setSelectedChat,
         selectedChat,
+        getParticipant,
     } = useContext(ChatContext);
     const [query, setQuery] = useState("");
     const [users, setUsers] = useState([]);
@@ -44,13 +45,6 @@ const Users = () => {
                 setUsers([]);
                 setQuery("");
             });
-    };
-
-    const getParticipant = chat => {
-        const participant = chat.participants.filter(
-            user => user.id !== authContext.user.id,
-        );
-        return participant[0];
     };
 
     const isChatSelected = (chat, selectedChatId) => {

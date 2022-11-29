@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header";
 import Users from "./Users";
 import Chat from "./Chat";
+import SocketProvider from "../provider/SocketProvider";
 
 const MainPage = () => {
     return (
@@ -26,8 +27,10 @@ const MainPage = () => {
                     height: "90%",
                 }}
             >
-                <Users />
-                <Chat />
+                <SocketProvider>
+                    <Users />
+                    <Chat />
+                </SocketProvider>
             </div>
         </div>
     );

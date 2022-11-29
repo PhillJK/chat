@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import ChatContext from "../context/ChatContext";
 import AuthContext from "../context/AuthContext";
 import axios from "axios";
@@ -40,7 +40,7 @@ const ChatProvider = ({ children }) => {
         setIsFetchingMessages(true);
 
         getChatMessages(selectedChat)
-            .then(messages => setMessages(messages))
+            .then(messages => addMessages(messages))
             .catch(error => {
                 toast.error(`Произошла ошибка... ${error?.message}`);
             })
@@ -48,6 +48,23 @@ const ChatProvider = ({ children }) => {
                 setIsFetchingMessages(false);
             });
     }, [selectedChat]);
+
+    const addMessages = messages => {
+        setMessages(prev =>
+            [...prev, ...messages].sort((a, b) => {
+                var firstDate = a.createdAt;
+                var secondDate = b.createdAt;
+
+                if (firstDate < secondDate) {
+                    return -1;
+                } else if (firstDate == secondDate) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }),
+        );
+    };
 
     const findUsersToChatWith = async query => {
         const { data } = await axios.get(
@@ -80,6 +97,14 @@ const ChatProvider = ({ children }) => {
         else throw new Error(data?.message);
     };
 
+    const isParticipantInSelectedChat = participant => {
+        const chat = chats.filter(({ id }) => id === selectedChat)[0];
+
+        if (!chat) return false;
+
+        return chat.participants.some(p => p.id === participant);
+    };
+
     const getChatMessages = async chatId => {
         const { data } = await axios.get(
             `${import.meta.env.VITE_SERVER_URL}/api/chat/${chatId}`,
@@ -95,6 +120,17 @@ const ChatProvider = ({ children }) => {
         else throw new Error(data?.message);
     };
 
+    const getParticipant = chat => {
+        if (typeof chat === "number") {
+            chat = chats.filter(ch => ch.id === chat)[0];
+        }
+
+        const participant = chat.participants.filter(
+            user => user.id !== authContext.user.id,
+        );
+        return participant[0];
+    };
+
     return (
         <ChatContext.Provider
             value={{
@@ -103,10 +139,13 @@ const ChatProvider = ({ children }) => {
                 isFetchingMessages,
                 selectedChat,
                 messagesOfSelectedChat: messages,
+                addMessages,
                 findUsersToChatWith,
                 addChatToUser,
                 getChatMessages,
                 setSelectedChat,
+                isParticipantInSelectedChat,
+                getParticipant,
             }}
         >
             {children}

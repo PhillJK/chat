@@ -1,9 +1,19 @@
 import { useContext, useState } from "react";
 import ChatContext from "../context/ChatContext";
+import SocketContext from "../context/SocketContext";
+import AuthContext from "../context/AuthContext";
 
 const Chat = () => {
     const [message, setMessage] = useState("");
-    const { selectedChat, messagesOfSelectedChat } = useContext(ChatContext);
+    const {
+        selectedChat,
+        messagesOfSelectedChat,
+        isFetchingMessages,
+        getParticipant,
+        addMessages,
+    } = useContext(ChatContext);
+    const { sendMessage } = useContext(SocketContext);
+    const authContext = useContext(AuthContext);
 
     return (
         <>
@@ -28,14 +38,68 @@ const Chat = () => {
                         }}
                         type="text"
                         name="message"
+                        value={message}
                         onChange={e => setMessage(e.target.value)}
+                        onKeyDown={e => {
+                            if (!message.trim()) return;
+
+                            if (e.key === "Enter") {
+                                sendMessage(
+                                    {
+                                        to: getParticipant(selectedChat).id,
+                                        content: message,
+                                        chatId: selectedChat,
+                                    },
+                                    messageFromServer => {
+                                        addMessages([messageFromServer]);
+                                    },
+                                );
+
+                                setMessage("");
+                            }
+                        }}
                         placeholder="Введите текст..."
                     />
-                    <div>
-                        {!!messagesOfSelectedChat?.length &&
-                            messagesOfSelectedChat.map(m => (
-                                <div>{m.text}</div>
-                            ))}
+                    <div
+                        style={{
+                            flexShrink: 1,
+                            flexGrow: 1,
+                            marginBottom: 10,
+                        }}
+                    >
+                        {isFetchingMessages ? (
+                            <h1>Loading...</h1>
+                        ) : !!messagesOfSelectedChat?.length ? (
+                            <div
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "end",
+                                    alignItems: "start",
+                                }}
+                            >
+                                {messagesOfSelectedChat.map(m => (
+                                    <div
+                                        style={{
+                                            padding: "10px",
+                                            borderRadius: "10px",
+                                            background:
+                                                m.fromId === authContext.user.id
+                                                    ? "#808080"
+                                                    : "#2b2a33",
+                                            margin: "5px 20px",
+                                        }}
+                                        key={m.id}
+                                    >
+                                        {m.text}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>Нету сообщений</p>
+                        )}
                     </div>
                 </div>
             ) : (
