@@ -65,6 +65,7 @@ const Chat = () => {
                             flexShrink: 1,
                             flexGrow: 1,
                             marginBottom: 10,
+                            overflowY: "scroll",
                         }}
                     >
                         {isFetchingMessages ? (

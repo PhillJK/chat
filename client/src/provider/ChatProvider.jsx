@@ -40,7 +40,10 @@ const ChatProvider = ({ children }) => {
         setIsFetchingMessages(true);
 
         getChatMessages(selectedChat)
-            .then(messages => addMessages(messages))
+            .then(messages => {
+                setMessages([]);
+                addMessages(messages);
+            })
             .catch(error => {
                 toast.error(`Произошла ошибка... ${error?.message}`);
             })
