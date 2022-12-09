@@ -3,8 +3,11 @@ import { Server } from "socket.io";
 import sessionMiddleware from "./middlewares/session.middleware";
 import { NextFunction, Request, Response } from "express";
 import { OperationalError } from "./errors/OperationalError";
-import { ORIGIN } from "@config";
+import { ORIGIN, PORT } from "@config";
 import { Message, PrismaClient } from "@prisma/client";
+import { writeFile } from "fs";
+import { v4 as uuid } from "uuid";
+import { HOST } from "@config";
 
 class SocketServer {
     public io: Server;
@@ -20,6 +23,7 @@ class SocketServer {
                 origin: ORIGIN,
                 credentials: true,
             },
+            maxHttpBufferSize: 1e8,
         });
 
         this.prisma = new PrismaClient();
@@ -62,6 +66,33 @@ class SocketServer {
 
                 if (socketIdOfReceiver)
                     this.sendMessage(socketIdOfReceiver, message);
+            });
+
+            socket.on("message_send_file", async (file, data, cb) => {
+                const socketIdOfReceiver = this.getSocketIdFromUserId(data.to);
+                const filename = `${uuid()}.${data.ext}`;
+
+                writeFile(`./public/${filename}`, file, async err => {
+                    if (err) {
+                        return cb({ error: true });
+                    }
+
+                    const url = `${HOST}:${PORT}/static/${filename}`;
+
+                    const message = await this.prisma.message.create({
+                        data: {
+                            type: "File",
+                            chatId: data.chatId,
+                            fromId: userId,
+                            url,
+                        },
+                    });
+
+                    cb({ error: false, ...message });
+
+                    if (socketIdOfReceiver)
+                        this.sendMessage(socketIdOfReceiver, message);
+                });
             });
 
             socket.on("disconnect", () => {

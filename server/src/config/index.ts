@@ -17,4 +17,9 @@ const SECRET_KEY =
         ? process.env.SECRET_KEY
         : "secret";
 
-export { PORT, ORIGIN, CREDENTIALS, LOG_FORMAT, SECRET_KEY };
+const HOST =
+    typeof process.env.HOST === "string"
+        ? process.env.HOST
+        : "http://localhost";
+
+export { PORT, ORIGIN, CREDENTIALS, LOG_FORMAT, SECRET_KEY, HOST };
