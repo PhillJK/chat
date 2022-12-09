@@ -4,8 +4,9 @@
 
 1. `npm install`
 2. создаем файл `.env` и добавляем туда переменные среды указанные в `.env.example`
-3. `npm run prisma:migrate` и `npm run prisma:generate`
-4. `npm run dev`
+3. создаем папку `public` в `root`
+4. `npm run prisma:migrate` и `npm run prisma:generate`
+5. `npm run dev`
 
 ### Клиент
 
