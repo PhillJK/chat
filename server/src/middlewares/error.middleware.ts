@@ -3,7 +3,7 @@ import { OperationalError } from "@errors/OperationalError";
 
 const errorMiddleware = (
     error: OperationalError | Error,
-    req: Request,
+    _: Request,
     res: Response,
     next: NextFunction,
 ) => {

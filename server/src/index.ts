@@ -3,8 +3,6 @@ import IndexRoute from "./routes/index.route";
 import AuthRoute from "./routes/auth.route";
 import ChatRoute from "./routes/chat.route";
 import http from "http";
-import { Server } from "socket.io";
-import { ORIGIN } from "@config";
 
 import { Session } from "express-session";
 import { User } from "@interfaces/user.interfaces";

@@ -10,7 +10,7 @@ const validationMiddleware = (
     whitelist = true,
     forbidNonWhitelisted = true,
 ): RequestHandler => {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return (req: Request, _: Response, next: NextFunction) => {
         type RequestData = keyof typeof req;
 
         const body = req[value as RequestData];
