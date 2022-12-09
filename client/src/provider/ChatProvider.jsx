@@ -13,7 +13,7 @@ const ChatProvider = ({ children }) => {
     const authContext = useContext(AuthContext);
 
     useEffect(() => {
-        if (!authContext?.user?.id) return;
+        if (!authContext?.user) return;
 
         axios
             .get(`${import.meta.env.VITE_SERVER_URL}/api/chat/user`, {
@@ -51,6 +51,32 @@ const ChatProvider = ({ children }) => {
                 setIsFetchingMessages(false);
             });
     }, [selectedChat]);
+
+    const getChats = useCallback(async () => {
+        setIsFetchingChats(true);
+
+        try {
+            const { data } = await axios.get(
+                `${import.meta.env.VITE_SERVER_URL}/api/chat/user`,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                },
+            );
+
+            setChats(data.chats);
+            setIsFetchingChats(false);
+
+            return data.chats;
+        } catch (error) {
+            toast.error(
+                `Произошла ошибка во время феча Чатов... ${error?.message}`,
+            );
+            setIsFetchingChats(false);
+        }
+    }, []);
 
     const addMessages = messages => {
         setMessages(prev =>
@@ -134,6 +160,17 @@ const ChatProvider = ({ children }) => {
         return participant[0];
     };
 
+    const getChatFromParticipantId = useCallback(
+        userId => {
+            return chats.find(chat =>
+                chat.participants.some(
+                    participant => participant.id === userId,
+                ),
+            );
+        },
+        [chats],
+    );
+
     return (
         <ChatContext.Provider
             value={{
@@ -149,6 +186,8 @@ const ChatProvider = ({ children }) => {
                 setSelectedChat,
                 isParticipantInSelectedChat,
                 getParticipant,
+                getChats,
+                getChatFromParticipantId,
             }}
         >
             {children}

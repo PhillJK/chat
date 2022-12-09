@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import ChatContext from "../context/ChatContext";
 import SocketContext from "../context/SocketContext";
 import AuthContext from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 const Chat = () => {
     const [message, setMessage] = useState("");
@@ -12,7 +13,7 @@ const Chat = () => {
         getParticipant,
         addMessages,
     } = useContext(ChatContext);
-    const { sendMessage } = useContext(SocketContext);
+    const { sendMessage, sendFile } = useContext(SocketContext);
     const authContext = useContext(AuthContext);
 
     return (
@@ -32,35 +33,73 @@ const Chat = () => {
                         padding: "10px",
                     }}
                 >
-                    <input
+                    <div
                         style={{
-                            padding: 10,
-                            borderRadius: 15,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: "10px",
                         }}
-                        type="text"
-                        name="message"
-                        value={message}
-                        onChange={e => setMessage(e.target.value)}
-                        onKeyDown={e => {
-                            if (!message.trim()) return;
+                    >
+                        <input
+                            style={{
+                                padding: 10,
+                                borderRadius: 15,
+                                flexGrow: 1,
+                                flexShrink: 1,
+                            }}
+                            type="text"
+                            name="message"
+                            value={message}
+                            onChange={e => setMessage(e.target.value)}
+                            onKeyDown={e => {
+                                if (!message.trim()) return;
 
-                            if (e.key === "Enter") {
-                                sendMessage(
+                                if (e.key === "Enter") {
+                                    sendMessage(
+                                        {
+                                            to: getParticipant(selectedChat).id,
+                                            content: message,
+                                            chatId: selectedChat,
+                                        },
+                                        messageFromServer => {
+                                            addMessages([messageFromServer]);
+                                        },
+                                    );
+
+                                    setMessage("");
+                                }
+                            }}
+                            placeholder="Введите текст..."
+                        />
+                        <input
+                            type="file"
+                            name="file"
+                            onChange={e => {
+                                const file = e.target.files[0];
+                                const index = file.name.lastIndexOf(".");
+                                const ext = file.name.slice(index + 1);
+
+                                sendFile(
+                                    file,
                                     {
                                         to: getParticipant(selectedChat).id,
-                                        content: message,
                                         chatId: selectedChat,
+                                        ext,
                                     },
-                                    messageFromServer => {
-                                        addMessages([messageFromServer]);
+                                    response => {
+                                        if (response.error)
+                                            return toast.error(
+                                                "Не получилось отправить файл",
+                                            );
+
+                                        delete response.error;
+
+                                        addMessages([response]);
                                     },
                                 );
-
-                                setMessage("");
-                            }
-                        }}
-                        placeholder="Введите текст..."
-                    />
+                            }}
+                        />
+                    </div>
                     {isFetchingMessages ? (
                         <h1>Loading...</h1>
                     ) : !!messagesOfSelectedChat?.length ? (
@@ -87,7 +126,20 @@ const Chat = () => {
                                     }}
                                     key={m.id}
                                 >
-                                    {m.text}
+                                    {m.type === "Text" ? (
+                                        m.text
+                                    ) : (
+                                        <>
+                                            <span>Файл:</span>
+                                            <a
+                                                href={m.url}
+                                                download
+                                                target="_blank"
+                                            >
+                                                Скачать
+                                            </a>
+                                        </>
+                                    )}
                                 </div>
                             ))}
                         </div>

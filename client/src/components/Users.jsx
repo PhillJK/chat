@@ -18,7 +18,6 @@ const Users = () => {
     } = useContext(ChatContext);
     const [query, setQuery] = useState("");
     const [users, setUsers] = useState([]);
-    const authContext = useContext(AuthContext);
 
     const submitForm = () => {
         findUsersToChatWith(query)
