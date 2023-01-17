@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { OperationalError } from "@errors/OperationalError";
 
-const errorMiddleware = (
-    error: OperationalError | Error,
-    _: Request,
-    res: Response,
-    next: NextFunction,
-) => {
+const errorMiddleware = (error: OperationalError | Error, _: Request, res: Response, next: NextFunction) => {
     try {
         console.error(error);
         if (error instanceof OperationalError) {

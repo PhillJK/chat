@@ -64,8 +64,7 @@ class SocketServer {
 
                 cb(message);
 
-                if (socketIdOfReceiver)
-                    this.sendMessage(socketIdOfReceiver, message);
+                if (socketIdOfReceiver) this.sendMessage(socketIdOfReceiver, message);
             });
 
             socket.on("message_send_file", async (file, data, cb) => {
@@ -90,8 +89,7 @@ class SocketServer {
 
                     cb({ error: false, ...message });
 
-                    if (socketIdOfReceiver)
-                        this.sendMessage(socketIdOfReceiver, message);
+                    if (socketIdOfReceiver) this.sendMessage(socketIdOfReceiver, message);
                 });
             });
 
@@ -103,11 +101,7 @@ class SocketServer {
 
     private initializeMiddlewares() {
         this.io.use((socket, next) =>
-            sessionMiddleware()(
-                socket.request as Request,
-                {} as Response,
-                next as NextFunction,
-            ),
+            sessionMiddleware()(socket.request as Request, {} as Response, next as NextFunction),
         );
 
         this.io.use((socket, next) => {

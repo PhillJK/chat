@@ -11,8 +11,7 @@ class ChatService {
     public messages = this.prisma.message;
 
     public async getUserChats(id: number) {
-        if (isEmpty(id))
-            throw new OperationalError("User id is not defined", 400);
+        if (isEmpty(id)) throw new OperationalError("User id is not defined", 400);
 
         const user = await this.users.findUnique({
             where: { id: id },
@@ -47,21 +46,14 @@ class ChatService {
         });
 
         //Exclude unnecassary fields from users
-        const users: User[] = usersData.map(user =>
-            exclude(user, ["password", "email", "createdAt", "updatedAt"]),
-        );
+        const users: User[] = usersData.map(user => exclude(user, ["password", "email", "createdAt", "updatedAt"]));
 
         return users;
     }
 
     public async addChatToUser(userId: number, otherUserId: number) {
-        if (isEmpty(userId))
-            throw new OperationalError("Id is not defined", 400);
-        if (isEmpty(otherUserId))
-            throw new OperationalError(
-                "Participants user id is not defined",
-                400,
-            );
+        if (isEmpty(userId)) throw new OperationalError("Id is not defined", 400);
+        if (isEmpty(otherUserId)) throw new OperationalError("Participants user id is not defined", 400);
 
         const isChatExists = await this.chats.findFirst({
             where: {
@@ -75,8 +67,7 @@ class ChatService {
             },
         });
 
-        if (isChatExists)
-            throw new OperationalError("Chat already exists", 400);
+        if (isChatExists) throw new OperationalError("Chat already exists", 400);
 
         const chatData = await this.chats.create({
             data: {
@@ -100,8 +91,7 @@ class ChatService {
     }
 
     public async getMessages(chatId: number) {
-        if (isEmpty(chatId))
-            throw new OperationalError("Chat id is not defined", 400);
+        if (isEmpty(chatId)) throw new OperationalError("Chat id is not defined", 400);
 
         const messages = await this.messages.findMany({ where: { chatId } });
 

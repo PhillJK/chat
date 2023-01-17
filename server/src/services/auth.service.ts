@@ -8,18 +8,13 @@ class AuthService {
     public users = new PrismaClient().user;
 
     public async signup(userData: CreateUserDto) {
-        if (isEmpty(userData))
-            throw new OperationalError("user data is empty", 400);
+        if (isEmpty(userData)) throw new OperationalError("user data is empty", 400);
 
         const isUserExists = await this.users.findUnique({
             where: { email: userData.email },
         });
 
-        if (isUserExists)
-            throw new OperationalError(
-                `User with email ${userData.email} already exists`,
-                409,
-            );
+        if (isUserExists) throw new OperationalError(`User with email ${userData.email} already exists`, 409);
 
         const hashedPassword = await hash(userData.password, 10);
         const createUserData = await this.users.create({
@@ -30,21 +25,15 @@ class AuthService {
     }
 
     public async login(userData: UserDto) {
-        if (isEmpty(userData))
-            throw new OperationalError("user data is empty", 400);
+        if (isEmpty(userData)) throw new OperationalError("user data is empty", 400);
 
         const user = await this.users.findUnique({
             where: { email: userData.email },
         });
-        if (!user)
-            throw new OperationalError(
-                `User with ${userData.email} does not exist`,
-                409,
-            );
+        if (!user) throw new OperationalError(`User with ${userData.email} does not exist`, 409);
 
         const isPasswordMatch = await compare(userData.password, user.password);
-        if (!isPasswordMatch)
-            throw new OperationalError(`Password is incorrect`, 409);
+        if (!isPasswordMatch) throw new OperationalError(`Password is incorrect`, 409);
 
         return user;
     }

@@ -5,15 +5,9 @@ import { NextFunction, Request, Response } from "express";
 class ChatController {
     public chatService = new ChatService();
 
-    public getChatsOfUser = async (
-        req: Request,
-        res: Response,
-        next: NextFunction,
-    ) => {
+    public getChatsOfUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const chats = await this.chatService.getUserChats(
-                req.session?.user?.id as number,
-            );
+            const chats = await this.chatService.getUserChats(req.session?.user?.id as number);
 
             res.status(200).json({ status: "ok", chats });
         } catch (error) {
@@ -21,11 +15,7 @@ class ChatController {
         }
     };
 
-    public findUserChat = async (
-        req: Request,
-        res: Response,
-        next: NextFunction,
-    ) => {
+    public findUserChat = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const query = req.query.name as string;
 
@@ -37,18 +27,11 @@ class ChatController {
         }
     };
 
-    public addChatToUser = async (
-        req: Request,
-        res: Response,
-        next: NextFunction,
-    ) => {
+    public addChatToUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const body: AddChatToUserDto = req.body;
 
-            const chat = await this.chatService.addChatToUser(
-                req.session?.user?.id as number,
-                body.userId,
-            );
+            const chat = await this.chatService.addChatToUser(req.session?.user?.id as number, body.userId);
 
             res.status(201).json({ status: "ok", chat });
         } catch (error) {
@@ -56,11 +39,7 @@ class ChatController {
         }
     };
 
-    public getChatMessages = async (
-        req: Request,
-        res: Response,
-        next: NextFunction,
-    ) => {
+    public getChatMessages = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const chatId = Number(req.params?.id);
 
